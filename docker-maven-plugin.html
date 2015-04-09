@@ -47,6 +47,7 @@
         <ol>
             <li>Who am I?</li>
             <li>Motivations for writing a plugin.</li>
+            <li>What does the plugin do?</li>
             <li>Architecture of the plugin.</li>
             <li>The main course: demos.</li>
         </ol>
@@ -54,67 +55,73 @@
     <section>
         <h2>Who Am I?</h2>
         <ul>
-            <li>Java Server Techincal Lead Of Game Studio Gamesys.</li>
+            <li>Server Side Java Technical Lead Of Game Studio Gamesys.</li>
             <li>12 Years Of Enterprise Application Development Experience.</li>
             <li>Co-author of Selenium WebDriver In Practice.</li>
-            <li>Test lover.</li>
+            <li>Desire for high-quality software.</li>
+            <li>"Recreational coder".</li>
         </ul>
     </section>
     <section>
         <section>
             <h2>Docker VirtualBox Plugin</h2>
-        </section>
-        <section>
-            <h3>Goal</h3>
-            <p>Build and test an application on a VirtualBox starting from nothing.</p>
-        </section>
-        <section>
-            <h3>Problems</h3>
-            <ul>
-                <li>I had to build VirtualBox base images.</li>
-                <li>Verbose XML driven syntax.</li>
-                <li>Masses of file I/O.</li>
-                <li>Slow as to be unusable.</li>
-            </ul>
+            <aside class="notes">
+                <h3>Goal</h3>
+                <p>Build and test an application on a VirtualBox starting from nothing.</p>
+                <h3>Problems</h3>
+                <ul>
+                    <li>I had to build VirtualBox base images.</li>
+                    <li>Verbose XML driven syntax.</li>
+                    <li>Masses of file I/O.</li>
+                    <li>Slow as to be unusable.</li>
+                </ul>
+            </aside>
         </section>
         <section>
             <h2>The Uber-WAR That Would Not Deploy</h2>
 
             <img src="images/docker-maven-plugin/eat-everything.jpg"/>
-        </section>
-        <section>
-            <h3>Oh Uber-WAR - What Problems You Cause!</h3>
-            <ul>
-                <li>Dozens Of Developers Committing To A Large Tree Of Dependencies.</li>
-                <li>Regularly Broken.</li>
-                <li>Automatically Or Manually Deployed.</li>
-                <li>Angry QAs.</li>
-                <li>Nightly Test Suite Often Red (no feedback).</li>
-            </ul>
-        </section>
-        <section>
-            <h3>Solution?</h3>
-            <ul>
-                <li>Smoke test on the CI - bad WAR cannot get into the wild.</li>
-                <li>Send an IM notifcation to the the culprit.</li>
-                <li>QAs happy!</li>
-                <li>Test suite green, or red for the right reason.</li>
-            </ul>
+            <aside class="notes">
+                <h3>Oh Uber-WAR - What Problems You Cause!</h3>
+                <ul>
+                    <li>Dozens Of Developers Committing To A Large Tree Of Dependencies.</li>
+                    <li>Regularly Broken.</li>
+                    <li>Automatically Or Manually Deployed.</li>
+                    <li>Angry QAs.</li>
+                    <li>Nightly Test Suite Often Red (no feedback).</li>
+                </ul>
+                <h3>Solution?</h3>
+                <ul>
+                    <li>Smoke test on the CI - bad WAR cannot get into the wild.</li>
+                    <li>Send an IM notifcation to the the culprit.</li>
+                    <li>QAs happy!</li>
+                    <li>Test suite green, or red for the right reason.</li>
+                </ul>
+            </aside>
         </section>
     </section>
     <section>
         <h1>March 2014</h1>
-        <p>I want my Docker applications to be tested before they get into the repository.</p>
-        <p>Must write a plugin to do so.</p>
+        <aside class="notes">
+            <p>I want my Docker applications to be tested before they get into the repository.</p>
+            <p>Must write a plugin to do so.</p>
+        </aside>
     </section>
     <section>
         <h2>What Does The Plugin Do?</h2>
-        <ol>
-            <li>Allow you to run images as part of the Maven project lifecycle.</li>
-            <li>Version control a project with the images it depends on.</li>
-            <li>Build containers using project artifacts.</li>
-            <li>Test those built containers before deploying.</li>
-        </ol>
+        <aside class="notes">
+            <ol>
+                <li>Allow you to run one or more images as part of the Maven project lifecycle.</li>
+                <li>Version control a project with the images it depends on.</li>
+                <li>Build containers using project artifacts.</li>
+                <li>Test those built containers before deploying.</li>
+            </ol>
+            <h2>Non-goals</h2>
+            <ol>
+                <li>Replacement for Fig.</li>
+                <li>Replacement for the <code>docker</code> command.</li>
+            </ol>
+        </aside>
     </section>
     <section>
         <section><h1>Architecture</h1></section>
@@ -191,7 +198,7 @@ tag:
             <li>Gradle, Ant, and SBT Versions</li>
             <li>Fig (aka Compose) Compatibility</li>
         </ul>
-    </section>
+    </section>  
     <section>
         <h1>Fin</h1>
         <p>
