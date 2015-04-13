@@ -33,62 +33,79 @@
             img {border-style: none !important}
         </style>
 	</head>
-
 	<body>
-
    	<div class="reveal">
 <div class="slides">
     <section>
         <h1>Docker Maven Plugin</h1>
-        <h2>By Alex Collins</h2>
-    </section>
-    <section>
-        <h2>Overview</h2>
-        <ol>
-            <li>Who am I?</li>
-            <li>Motivations for writing a plugin.</li>
-            <li>What does the plugin do?</li>
-            <li>Architecture of the plugin.</li>
-            <li>The main course: demos.</li>
-        </ol>
+        <h3>Building a tool for Docker to create and test containers.</p>
+        <p>By Alex Collins</p>
+        <aside class="notes">
+            <ol>
+                <li>Who am I?</li>
+                <li>Motivations for writing a tool.</li>
+                <li>What does the tool do?</li>
+                <li>Architecture of the tool.</li>
+                <li>Two short demos.</li>
+            </ol>
+        </aside>
     </section>
     <section>
         <h2>Who Am I?</h2>
-        <ul>
-            <li>Server Side Java Technical Lead Of Game Studio Gamesys.</li>
-            <li>12 Years Of Enterprise Application Development Experience.</li>
-            <li>Co-author of Selenium WebDriver In Practice.</li>
-            <li>Desire for high-quality software.</li>
-            <li>"Recreational coder".</li>
-        </ul>
+        <p class="fragment" ><img src="images/docker-maven-plugin/babs.png"/></p>
+        <p class="fragment">"Recreational coder".</p>
+        <aside class="notes">
+            <ul>
+                <li>Server Side Java Technical Lead Of Game Studio Gamesys.</li>
+                <li>12 Years Of Enterprise Application Development Experience.</li>
+                <li>Co-author of Selenium WebDriver In Practice.</li>
+                <li>Like Andrew Martin who presented here in January - "I like lack of bugs".</li>
+                <li>"Recreational coder". Google "I am a recreational coder" - 5 results.</li>
+            </ul>
+        </aside>
+    </section>
+    <section>
+        <h1>But first...</h1>
+        <p>When I say:</p>
+        <p><i>"Maven plugin"</i></p>
+        <p>Think:</p>
+        <p><i>"A plugin to a build tool."</i></p>
+        <aside class="notes">
+            <p>
+                A plugin 
+            </p>
+        </aside>
     </section>
     <section>
         <section>
             <h2>Docker VirtualBox Plugin</h2>
+            <p class="fragment"><img src="images/docker-maven-plugin/vbox-xml-files.png"/></p>
             <aside class="notes">
-                <h3>Goal</h3>
-                <p>Build and test an application on a VirtualBox starting from nothing.</p>
-                <h3>Problems</h3>
                 <ul>
+                    <li>Working on a software installer for Windows Server 2003. </li>
+                    <li>Repeatedly install Windows onto a VirtualBox, copy and run scripts.</li>
+                    <li>A plugin for the that builds and tests one or more VirtualBoxs - starting from nothing.</li>
                     <li>I had to build VirtualBox base images.</li>
                     <li>Verbose XML driven syntax.</li>
-                    <li>Masses of file I/O.</li>
-                    <li>Slow as to be unusable.</li>
+                    <li>Masses of file I/O make writing the tool.</li>
+                    <li>Even small amounts of I/O stack up if you do them a lot.</li>
                 </ul>
             </aside>
         </section>
         <section>
             <h2>The Uber-WAR That Would Not Deploy</h2>
-
             <img src="images/docker-maven-plugin/eat-everything.jpg"/>
             <aside class="notes">
-                <h3>Oh Uber-WAR - What Problems You Cause!</h3>
+                <h3>Problems</h3>
                 <ul>
-                    <li>Dozens Of Developers Committing To A Large Tree Of Dependencies.</li>
                     <li>Regularly Broken.</li>
                     <li>Automatically Or Manually Deployed.</li>
                     <li>Angry QAs.</li>
                     <li>Nightly Test Suite Often Red (no feedback).</li>
+                </ul>
+                <h3>Cause</h3>
+                <ul>
+                    <li>Dozens Of Developers Committing To A Large Tree Of Dependencies.</li>
                 </ul>
                 <h3>Solution?</h3>
                 <ul>
@@ -101,14 +118,18 @@
         </section>
     </section>
     <section>
-        <h1>March 2014</h1>
+        <h1>Jan '14</h1>
+        <p><i>"Alex - Have you heard of Docker?"</i></p>
         <aside class="notes">
             <p>I want my Docker applications to be tested before they get into the repository.</p>
             <p>Must write a plugin to do so.</p>
         </aside>
     </section>
     <section>
-        <h2>What Does The Plugin Do?</h2>
+        <h2>What Does The Plugin Allow?</h2>
+        <p>
+            Define one or may of containers (e.g. databases, web servers, application servers) throught files, configure them (ports etc.), and manage them as part of the build.
+        </p>
         <aside class="notes">
             <ol>
                 <li>Allow you to run one or more images as part of the Maven project lifecycle.</li>
@@ -116,26 +137,22 @@
                 <li>Build containers using project artifacts.</li>
                 <li>Test those built containers before deploying.</li>
             </ol>
-            <h2>Non-goals</h2>
+        </aside>
+    </section>
+    <section>
+        <h1>Use Cases?</h1>
+        <aside class="notes">
             <ol>
-                <li>Replacement for Fig.</li>
-                <li>Replacement for the <code>docker</code> command.</li>
+                <li>Building tested images.</li>
+                <li>Building applications that depend on containers.</li>
             </ol>
         </aside>
     </section>
     <section>
-        <section><h1>Architecture</h1></section>
         <section>
-            <h2>Layers</h2>
-            <ol>
-                <li>Thin Maven Plugin Glue.</li>
-                <li>Orchestrating Engine.</li>
-                <li>Docker API Client.</li>
-            </ol>
+            <h1>Set-up</h1>
+            <p><img src="images/docker-maven-plugin/drop-wizard-files.png"/></p>
         </section>
-    </section>
-    <section>
-        <section><h1>Set-up</h1></section>
         <section>
             <h2>Maven <code>./pom.xml</code></h2>
             <pre><code><plugin>
@@ -146,17 +163,22 @@
             <goals>
                 <goal>clean</goal>
                 <goal>validate</goal>
-                <goal>package</goal>
+                <goal>package</goal> <!-- i.e. build -->
                 <goal>start</goal>
                 <goal>stop</goal>
-                <goal>deploy</goal>
+                <goal>deploy</goal> <!-- i.e. push -->
             </goals>
         </execution>
     </executions>
 </plugin></code></pre>
+            <aside class="notes">
+                <ol>
+                    <li>Build file.</li>
+                </ol>
+            </aside>
         </section>
         <section>
-            <h2><code>src/main/docker/app/Dockerfile</code></h2>
+            <h2><code>Dockerfile</code></h2>
             <pre><code>FROM dockerfile/java:oracle-java7
 
 EXPOSE 8080
@@ -168,7 +190,7 @@ ADD ${project.build.finalName}.jar .
 CMD java  -jar /${project.build.finalName}.jar</code></pre>
         </section>
         <section>
-            <h2><code>src/main/docker/app/conf.yml</code></h2>
+            <h2><code>conf.yml</code></h2>
             <pre><code>packaging:
   add:
     - target/${project.build.finalName}.jar
@@ -186,33 +208,67 @@ tag:
     </section>
     <section>
         <h2>Demo: ElasticSearch in a Box</h2>
-        <p><a href="https://github.com/alexec/search-in-a-box">https://github.com/alexec/search-in-a-box</a></p>
-        <p>Technologies: Docker, Maven, Java, Spring Boot, Elastic Search, JUnit, Selenium WebDriver</p>
+        <p><small>Docker, Maven, Java, Spring Boot, Elastic Search, JUnit, Selenium WebDriver</small></p>
     </section>
     <section>
         <h2>Demo: Selenium Grid</h2>
-        <p><a href="https://github.com/alexec/selenium-visual-testing">https://github.com/alexec/selenium-visual-testing</a></p>
-        <p>Technologies: Docker, Maven, Java, JUnit, Selenium Grid</p>
+        <p><small>Docker, Maven, Java, JUnit, Selenium Grid</small></p>
+    </section>
+    <section>
+        <section>
+            <h1>Tool Architecture</h1>
+            <p><img src="images/docker-maven-plugin/cake.png"/></p>
+        </section>
+        <section>
+            <h2>Layer 1: Docker API Client</h2>
+            <aside class="notes">
+                <ol>
+                    <li>"docker-java"</li>
+                    <li>Does all the authentication with the Docker daemon.</li>
+                    <li>Can be replaced with test doubles for dependencies to ease testing.</li>
+                </ol>
+            </aside>
+        </section>
+        <section>
+            <h2>Layer 2: Docker Orchestrator</h2>
+            <aside class="notes">
+                <ol>
+                    <li>Meat - does heavy lifting.</li>
+                    <li>Understand the configuration files.</li>
+                    <li>Figures out image dependencies.</li>
+                    <li>Acutally does the building images, and start/stop of containers.</li>
+                    <li>Portable, can be use outside Maven.</li>
+                    <li>Plugin-API (e.g. boot2docker).</li>
+                </ol>
+            </aside>
+        </section>        
+        <section>
+            <h2>Layer 3: Maven Plugin</h2>
+            <aside class="notes">
+                <ol>
+                    <li>Very hard to test plugins, so does very little.</li>
+                    <li>Translate XML into set-up.</li>
+                    <li>Best practise - do very little work.</li>
+                </ol>
+            </aside>
+        </section>
     </section>
     <section>
         <h2>What's Next?</h2>
         <ul>
             <li>Gradle, Ant, and SBT Versions</li>
-            <li>Fig (aka Compose) Compatibility</li>
+            <li>Docker Compose Compatibility</li>
         </ul>
     </section>  
     <section>
-        <h1>Fin</h1>
+        <h1>End</h1>
         <p>
             <a href="http://www.alexecollins.com/tags/docker/">http://www.alexecollins.com/tags/docker</a>
-            <a href="https://github.com/alexec">https://github.com/alexec/docker-maven-plugin</a>
+            <a href="https://github.com/alexec/docker">https://github.com/alexec/docker</a>
         </p>
-        <p><small>Presentation made with RevealJS</small></p>
     </section>
 </div>
 </div>
-
-
 		<script src="lib/js/head.min.js"></script>
 		<script src="js/reveal.js"></script>
 
