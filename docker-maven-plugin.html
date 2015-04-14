@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 
-    <title>Docker Maven Plugin</title>
+    <title>Docker + Maven</title>
 
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -37,10 +37,11 @@
    	<div class="reveal">
 <div class="slides">
     <section>
-        <h1>Docker Maven Plugin</h1>
+        <h1>Docker + Maven</h1>
         <h3>Building a tool for Docker to create and test containers.</p>
         <p>By Alex Collins</p>
         <aside class="notes">
+            <p>Thank you!</p>
             <ol>
                 <li>Who am I?</li>
                 <li>Motivations for writing a tool.</li>
@@ -65,35 +66,8 @@
         </aside>
     </section>
     <section>
-        <h1>But first...</h1>
-        <p>When I say:</p>
-        <p><i>"Maven plugin"</i></p>
-        <p>Think:</p>
-        <p><i>"A plugin to a build tool."</i></p>
-        <aside class="notes">
-            <p>
-                A plugin 
-            </p>
-        </aside>
-    </section>
-    <section>
         <section>
-            <h2>Docker VirtualBox Plugin</h2>
-            <p class="fragment"><img src="images/docker-maven-plugin/vbox-xml-files.png"/></p>
-            <aside class="notes">
-                <ul>
-                    <li>Working on a software installer for Windows Server 2003. </li>
-                    <li>Repeatedly install Windows onto a VirtualBox, copy and run scripts.</li>
-                    <li>A plugin for the that builds and tests one or more VirtualBoxs - starting from nothing.</li>
-                    <li>I had to build VirtualBox base images.</li>
-                    <li>Verbose XML driven syntax.</li>
-                    <li>Masses of file I/O make writing the tool.</li>
-                    <li>Even small amounts of I/O stack up if you do them a lot.</li>
-                </ul>
-            </aside>
-        </section>
-        <section>
-            <h2>The Uber-WAR That Would Not Deploy</h2>
+            <h2>The WAR That Would Not Deploy</h2>
             <img src="images/docker-maven-plugin/eat-everything.jpg"/>
             <aside class="notes">
                 <h3>Problems</h3>
@@ -113,6 +87,19 @@
                     <li>Send an IM notifcation to the the culprit.</li>
                     <li>QAs happy!</li>
                     <li>Test suite green, or red for the right reason.</li>
+                </ul>
+            </aside>
+        </section>
+        <section>
+            <h2>Docker VirtualBox Plugin</h2>
+            <p class="fragment"><img src="images/docker-maven-plugin/vbox-xml-files.png"/></p>
+            <aside class="notes">
+                <ul>
+                    <li>Working on a software installer for Windows Server 2003. </li>
+                    <li>Repeatedly install Windows onto a VirtualBox, copy and run scripts.</li>
+                    <li>A plugin for the that builds and tests one or more VirtualBoxs - starting from nothing.</li>
+                    <li>Masses of file I/O make writing the tool.</li>
+                    <li>Even small amounts of I/O stack up if you do them a lot.</li>
                 </ul>
             </aside>
         </section>
@@ -136,15 +123,7 @@
                 <li>Version control a project with the images it depends on.</li>
                 <li>Build containers using project artifacts.</li>
                 <li>Test those built containers before deploying.</li>
-            </ol>
-        </aside>
-    </section>
-    <section>
-        <h1>Use Cases?</h1>
-        <aside class="notes">
-            <ol>
-                <li>Building tested images.</li>
-                <li>Building applications that depend on containers.</li>
+                <li>Track image to the source code on it.</li>
             </ol>
         </aside>
     </section>
@@ -209,6 +188,7 @@ tag:
     <section>
         <h2>Demo: ElasticSearch in a Box</h2>
         <p><small>Docker, Maven, Java, Spring Boot, Elastic Search, JUnit, Selenium WebDriver</small></p>
+	<p><a href="https://asciinema.org/a/18724?speed=2&autoplay=1" target="_blank"><img src="https://asciinema.org/a/18724.png" /></a></p>
     </section>
     <section>
         <h2>Demo: Selenium Grid</h2>
@@ -261,6 +241,20 @@ tag:
         </ul>
     </section>  
     <section>
+        <h1>Tips On Tools</h1>
+        <aside class="notes">
+            <ul>
+                <li>Try and utilize maintained third-party components.</li>
+                <li>Try and minimise file I/O.</li>
+                <li>Don't rely on the network when testing. Can you build your tool offline.</li>
+                <li>Think about how you can avoid repeating tasks, e.g. using caching.</li>
+                <li>Use test-doubles to speed up development.</li>
+                <li>When dealing with the OSS community, appreciate the help you get, but be careful of accepting pulls that don't have tests.</li>
+                <li>Have a good selection of test cases.</li>
+            </ul>
+        </aside>
+    </section>
+    <section>
         <h1>End</h1>
         <p>
             <a href="http://www.alexecollins.com/tags/docker/">http://www.alexecollins.com/tags/docker</a>
@@ -279,6 +273,7 @@ tag:
 			Reveal.initialize({
 				controls: false,
 				progress: true,
+                 slideNumber: true,
 				history: true,
 				center: true,
 
