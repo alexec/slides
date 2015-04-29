@@ -43,21 +43,21 @@
     <section>
         <p>
             <img src="images/docker-maven-plugin/maven-logo.png"/>
-            </p>
-        <p>
-            
+        </p>
+        <p>            
             <img src="images/docker-maven-plugin/docker-logo.png"/>
         </p>
         <p>Making a tool for Docker to build and test containers.</p>
         <p>By Alex Collins</p>
         <aside class="notes">
-            <p>Thank you!</p>
+            <p>Thank you to Steve Domin &amp; Ben Firshman for letting me speak tonight?</p>
             <ol>
                 <li>Who am I?</li>
                 <li>Motivations for writing a tool.</li>
                 <li>What does the tool do?</li>
-                <li>Architecture of the tool.</li>
                 <li>Two short demos.</li>
+                <li>Architecture of the tool.</li>
+                <li>Lessons I learned from writing tools</li>
             </ol>
         </aside>
     </section>
@@ -68,27 +68,24 @@
             <ul>
                 <li>Server Side Java Technical Lead Of Game Studio Gamesys.</li>
                 <li>12 Years Of Monolithic Application Development Experience.</li>
-                <li>Co-author of Selenium WebDriver In Practice.</li>
+                <li>Writing a book  WebDriver.</li>
                 <li>Like Andrew Martin who presented here in January - "I like lack of bugs".</li>
-                <li>"Recreational coder". Google "I am a recreational coder" - 5 results.</li>
+                <li>What my partner calls me "Recreational coder".</li>
             </ul>
         </aside>
     </section>
     <section>
         <section>
-            <h2>The WAR That Would Not Deploy</h2>
+            <h2>The WAR That <br/>Would Not Deploy</h2>
         </section>
         <section>
             <img src="images/docker-maven-plugin/eat-everything.jpg"/>
             <aside class="notes">
-                <h3>Problems</h3>
                 <ul>
-                    <li>Regularly Broken.</li>
+                    <li>Build on CI server.</li>
                     <li>Automatically Or Manually Deployed.</li>
                     <li>Angry QAs.</li>
                     <li>Nightly Test Suite Often Red (no feedback).</li>
-                </ul>
-                <h3>Solution?</h3>
                 <ul>
                     <li>Smoke test on the CI - bad WAR cannot get into the wild.</li>
                     <li>QAs happy!</li>
@@ -101,7 +98,6 @@
             <aside class="notes">
                 <ul>
                     <li>Working on a software installer for Windows Server 2003. </li>
-                    <li>Copy to USB stick</li>
                 </ul>
             </aside>
         </section>
@@ -109,7 +105,8 @@
             <img src="images/docker-maven-plugin/usb-stick.jpg"/>
             <aside class="notes">
                 <ul>
-                    <li>Repeatedly install Windows onto a VirtualBox, copy and run scripts.</li>
+                    <li>Break OS, and need to re-install form CD-ROM.</li>
+                    <li>Copy to USB stick</li>
                 </ul>
             </aside>
         </section>
@@ -117,7 +114,8 @@
             <img src="images/docker-maven-plugin/virtual-box.jpg"/>
             <aside class="notes">
                 <ul>
-                    <li>A plugin for the that builds and tests one or more VirtualBoxs - starting from nothing.</li>
+                    <li>Repeatedly install Windows onto a VirtualBox, copy and run scripts.</li>
+                    <li>A tool that builds and tests one or more VirtualBoxs - starting from nothing.</li>
                 </ul>
             </aside>
         </section>
@@ -126,8 +124,10 @@
         <h1>Jan '14</h1>
         <p><i>"Alex - Have you heard of Docker?"</i></p>
         <aside class="notes">
+            <p>This is really cool.</p>
+            <p>Build using Maven.</p>
             <p>I want my Docker applications to be tested before they get into the repository.</p>
-            <p>Thought to myself - I must write a tool to do so.</p>
+            <p>Thought to myself - I must write a something to do so.</p>
         </aside>
     </section>
     <section>
@@ -145,10 +145,9 @@
         <aside class="notes">
             <ol>
                 <li>Allow you to run one or more images as part of the Maven project lifecycle.</li>
-                <li>Version control a project with the images it depends on.</li>
                 <li>Build containers using project artifacts.</li>
                 <li>Test those built containers before deploying.</li>
-                <li>Track image to the source code on it.</li>
+                <li>If you version control, you can track the container to the source code of it.</li>
             </ol>
         </aside>
     </section>
@@ -175,6 +174,7 @@
 </plugin></code></pre>
             <aside class="notes">
                 <ol>
+                    <li>Is font big enough?</li>
                     <li>Maven build file.</li>
                     <li>Tell Maven when to build, start and stop containers.</li>
                 </ol>
@@ -213,13 +213,13 @@ healthChecks:
     - url: http://localhost:8080/
 tag:
     alexec/searchinabox:${project.version}</code></pre>
-        </section>
         <aside class="notes">
             <ul>
                 <li>Pre-Fig. Similar syntax is a lovely coincidence.</li>
                 <li>Health-checks to prevent using a busted container.</li>
             </ul>
         </aside>
+        </section>
     </section>
     <section>
         <h2>Demo: <br/>ElasticSearch in a Box</h2>
@@ -280,7 +280,7 @@ tag:
     </section>
     <section>
         <section>
-            <h1>Tips On Tools</h1>
+            <h1>Lessons I Learned</h1>
         </section>
         <section>
             <h2>Too Much Disk I/O Means <br/>You Miss Your Dinner</h2>
