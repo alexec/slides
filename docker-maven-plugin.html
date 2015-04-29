@@ -12,7 +12,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <link rel="stylesheet" href="css/reveal.css">
-    <link rel="stylesheet" href="css/theme/serif.css" id="theme">
+    <link rel="stylesheet" href="css/theme/simple.css" id="theme">
 
 		<!-- Code syntax highlighting -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -30,15 +30,25 @@
 		<script src="lib/js/html5shiv.js"></script>
 		<![endif]-->
         <style type="text/css">
-            img {border-style: none !important}
+            img {
+                border: 0 !important;
+                box-shadow: none !important;
+            }
+            code {font-size: 130% !important}
         </style>
 	</head>
 	<body>
    	<div class="reveal">
 <div class="slides">
     <section>
-        <h1>Docker + Maven</h1>
-        <h3>Building a tool for Docker to create and test containers.</p>
+        <p>
+            <img src="images/docker-maven-plugin/maven-logo.png"/>
+            </p>
+        <p>
+            
+            <img src="images/docker-maven-plugin/docker-logo.png"/>
+        </p>
+        <p>Making a tool for Docker to build and test containers.</p>
         <p>By Alex Collins</p>
         <aside class="notes">
             <p>Thank you!</p>
@@ -53,12 +63,11 @@
     </section>
     <section>
         <h2>Who Am I?</h2>
-        <p class="fragment" ><img src="images/docker-maven-plugin/babs.png"/></p>
         <p class="fragment">"Recreational coder".</p>
         <aside class="notes">
             <ul>
                 <li>Server Side Java Technical Lead Of Game Studio Gamesys.</li>
-                <li>12 Years Of Enterprise Application Development Experience.</li>
+                <li>12 Years Of Monolithic Application Development Experience.</li>
                 <li>Co-author of Selenium WebDriver In Practice.</li>
                 <li>Like Andrew Martin who presented here in January - "I like lack of bugs".</li>
                 <li>"Recreational coder". Google "I am a recreational coder" - 5 results.</li>
@@ -68,6 +77,8 @@
     <section>
         <section>
             <h2>The WAR That Would Not Deploy</h2>
+        </section>
+        <section>
             <img src="images/docker-maven-plugin/eat-everything.jpg"/>
             <aside class="notes">
                 <h3>Problems</h3>
@@ -77,29 +88,36 @@
                     <li>Angry QAs.</li>
                     <li>Nightly Test Suite Often Red (no feedback).</li>
                 </ul>
-                <h3>Cause</h3>
-                <ul>
-                    <li>Dozens Of Developers Committing To A Large Tree Of Dependencies.</li>
-                </ul>
                 <h3>Solution?</h3>
                 <ul>
                     <li>Smoke test on the CI - bad WAR cannot get into the wild.</li>
-                    <li>Send an IM notifcation to the the culprit.</li>
                     <li>QAs happy!</li>
                     <li>Test suite green, or red for the right reason.</li>
                 </ul>
             </aside>
         </section>
         <section>
-            <h2>Docker VirtualBox Plugin</h2>
-            <p class="fragment"><img src="images/docker-maven-plugin/vbox-xml-files.png"/></p>
+            <img src="images/docker-maven-plugin/dell.jpg"/>
             <aside class="notes">
                 <ul>
                     <li>Working on a software installer for Windows Server 2003. </li>
+                    <li>Copy to USB stick</li>
+                </ul>
+            </aside>
+        </section>
+        <section>
+            <img src="images/docker-maven-plugin/usb-stick.jpg"/>
+            <aside class="notes">
+                <ul>
                     <li>Repeatedly install Windows onto a VirtualBox, copy and run scripts.</li>
+                </ul>
+            </aside>
+        </section>
+        <section>
+            <img src="images/docker-maven-plugin/virtual-box.jpg"/>
+            <aside class="notes">
+                <ul>
                     <li>A plugin for the that builds and tests one or more VirtualBoxs - starting from nothing.</li>
-                    <li>Masses of file I/O make writing the tool.</li>
-                    <li>Even small amounts of I/O stack up if you do them a lot.</li>
                 </ul>
             </aside>
         </section>
@@ -109,14 +127,21 @@
         <p><i>"Alex - Have you heard of Docker?"</i></p>
         <aside class="notes">
             <p>I want my Docker applications to be tested before they get into the repository.</p>
-            <p>Must write a plugin to do so.</p>
+            <p>Thought to myself - I must write a tool to do so.</p>
+        </aside>
+    </section>
+    <section>
+        <h2>What Is A Maven Plugin?</h2>
+        <aside class="notes">
+            <p>
+                Some code that allows you to do extra task
+                as part of the process of buildin a piece
+                of software.
+            </p>
         </aside>
     </section>
     <section>
         <h2>What Does The Plugin Allow?</h2>
-        <p>
-            Define one or may of containers (e.g. databases, web servers, application servers) throught files, configure them (ports etc.), and manage them as part of the build.
-        </p>
         <aside class="notes">
             <ol>
                 <li>Allow you to run one or more images as part of the Maven project lifecycle.</li>
@@ -129,11 +154,7 @@
     </section>
     <section>
         <section>
-            <h1>Set-up</h1>
-            <p><img src="images/docker-maven-plugin/drop-wizard-files.png"/></p>
-        </section>
-        <section>
-            <h2>Maven <code>./pom.xml</code></h2>
+            <h2><code>pom.xml</code></h2>
             <pre><code><plugin>
     <groupId>com.alexecollins.docker</groupId>
     <artifactId>docker-maven-plugin</artifactId>
@@ -142,17 +163,20 @@
             <goals>
                 <goal>clean</goal>
                 <goal>validate</goal>
-                <goal>package</goal> <!-- i.e. build -->
+                <!-- i.e. build -->
+                <goal>package</goal> 
                 <goal>start</goal>
                 <goal>stop</goal>
-                <goal>deploy</goal> <!-- i.e. push -->
+                <!-- i.e. push -->
+                <goal>deploy</goal> 
             </goals>
         </execution>
     </executions>
 </plugin></code></pre>
             <aside class="notes">
                 <ol>
-                    <li>Build file.</li>
+                    <li>Maven build file.</li>
+                    <li>Tell Maven when to build, start and stop containers.</li>
                 </ol>
             </aside>
         </section>
@@ -167,6 +191,12 @@ EXPOSE 9300
 ADD ${project.build.finalName}.jar .
 
 CMD java  -jar /${project.build.finalName}.jar</code></pre>
+            <aside class="notes">
+                <ul>
+                    <li>Should be familar with this.</li>
+                    <li>Property replacement.</li>
+                </ul>
+            </aside>
         </section>
         <section>
             <h2><code>conf.yml</code></h2>
@@ -184,27 +214,28 @@ healthChecks:
 tag:
     alexec/searchinabox:${project.version}</code></pre>
         </section>
+        <aside class="notes">
+            <ul>
+                <li>Pre-Fig. Similar syntax is a lovely coincidence.</li>
+                <li>Health-checks to prevent using a busted container.</li>
+            </ul>
+        </aside>
     </section>
     <section>
-        <h2>Demo: ElasticSearch in a Box</h2>
-        <p><small>Docker, Maven, Java, Spring Boot, Elastic Search, JUnit, Selenium WebDriver</small></p>
+        <h2>Demo: <br/>ElasticSearch in a Box</h2>
+        <p>
+            <img src="images/docker-maven-plugin/spring-boot-logo.png"/>
+            <img src="images/docker-maven-plugin/elasticsearch-logo.png"/>
+        </p>
+        <p>Docker, Maven, Java, Spring Boot, Elastic Search, JUnit, Selenium WebDriver</p>
     </section>
     <section>
-        <!--
-	<p><a href="https://asciinema.org/a/18724?speed=2&autoplay=1" target="_blank"><img src="https://asciinema.org/a/18724.png" /></a></p>
--->
-        <video autoplay>
-            <source data-src="videos/search-in-a-box.mov"/>
-        </video>
-    </section>
-    <section>
-        <h2>Demo: Selenium Grid</h2>
-        <p><small>Docker, Maven, Java, JUnit, Selenium Grid</small></p>
-    </section>
-    <section>
-        <video autoplay>
-            <source data-src="videos/selenium-visual-testing.mov"/>
-        </video>
+        <h2>Demo: <br/>Selenium Grid</h2>
+        <p>
+            <img src="images/docker-maven-plugin/junit-logo.png"/>
+            <img src="images/docker-maven-plugin/selenium-logo.png"/>
+        </p>
+        <p>Docker, Maven, Java, JUnit, Selenium Grid</p>
     </section>
     <section>
         <section>
@@ -212,7 +243,10 @@ tag:
             <p><img src="images/docker-maven-plugin/cake.png"/></p>
         </section>
         <section>
-            <h2>Layer 1: Docker API Client</h2>
+            <h2>Layer 1: <br/>Docker API Client</h2>
+            <p>
+                <a href="https://github.com/docker-java/docker-java">https://github.com/docker-java/docker-java</a>
+            </p>
             <aside class="notes">
                 <ol>
                     <li>"docker-java"</li>
@@ -222,20 +256,19 @@ tag:
             </aside>
         </section>
         <section>
-            <h2>Layer 2: Docker Orchestrator</h2>
+            <h2>Layer 2: <br/>Embeddable Docker Orchestration Library</h2>
             <aside class="notes">
                 <ol>
                     <li>Meat - does heavy lifting.</li>
                     <li>Understand the configuration files.</li>
                     <li>Figures out image dependencies.</li>
-                    <li>Acutally does the building images, and start/stop of containers.</li>
+                    <li>Actually does the building images, and start/stop of containers.</li>
                     <li>Portable, can be use outside Maven.</li>
-                    <li>Plugin-API (e.g. boot2docker).</li>
                 </ol>
             </aside>
         </section>        
         <section>
-            <h2>Layer 3: Maven Plugin</h2>
+            <h2>Layer 3: <br/> Maven Plugin</h2>
             <aside class="notes">
                 <ol>
                     <li>Very hard to test plugins, so does very little.</li>
@@ -246,31 +279,57 @@ tag:
         </section>
     </section>
     <section>
+        <section>
+            <h1>Tips On Tools</h1>
+        </section>
+        <section>
+            <h2>Too Much Disk I/O Means <br/>You Miss Your Dinner</h2>
+            <p>
+                <img src="images/docker-maven-plugin/disk-on-fire.jpg"/></p>
+            <aside class="notes">
+                <ul>
+                    <li>Try and minimise file I/O.</li>            
+                    <li>Think about how you can avoid repeating tasks, e.g. using caching.</li>
+                    <li>Use test-doubles to speed up development.</li>
+                </ul>
+            </aside>
+        </section>
+        <section>
+            <h1>Use Free CI Servers</h1>
+            <p>
+                <img src="images/docker-maven-plugin/build-badges.png"/>
+            </p>
+            <aside class="notes">
+                <ul>
+                    <li>Use a CI system.</li>
+                    <li>Don't rely on the network when testing. Can you build your tool offline.</li>
+                </ul>
+            </aside>
+        </section>
+        <section>
+            <h1>OSS Community</h1>
+            <aside class="notes">
+                <ul>
+                    <li>When dealing with the OSS community, appreciate the help you get, but be careful of accepting pulls that don't have tests.</li>
+                </ul>
+            </aside>
+        </section>
+    </section>
+    <section>
         <h2>What's Next?</h2>
         <ul>
             <li>Gradle, Ant, and SBT Versions</li>
             <li>Docker Compose Compatibility</li>
         </ul>
+        <p>
+            <img src="images/docker-maven-plugin/gradle-logo.png"/> <img src="images/docker-maven-plugin/ant-logo.png"/>
+        </p>
     </section>  
-    <section>
-        <h1>Tips On Tools</h1>
-        <aside class="notes">
-            <ul>
-                <li>Try and utilize maintained third-party components.</li>
-                <li>Try and minimise file I/O.</li>
-                <li>Don't rely on the network when testing. Can you build your tool offline.</li>
-                <li>Think about how you can avoid repeating tasks, e.g. using caching.</li>
-                <li>Use test-doubles to speed up development.</li>
-                <li>When dealing with the OSS community, appreciate the help you get, but be careful of accepting pulls that don't have tests.</li>
-                <li>Have a good selection of test cases.</li>
-            </ul>
-        </aside>
-    </section>
     <section>
         <h1>End</h1>
         <p>
             <a href="http://www.alexecollins.com/tags/docker/">http://www.alexecollins.com/tags/docker</a>
-            <a href="https://github.com/alexec/docker">https://github.com/alexec/docker</a>
+            <a href="https://github.com/alexec/docker-maven-plugin">https://github.com/alexec/docker-maven-plugin</a>
         </p>
     </section>
 </div>
