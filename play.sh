@@ -2,7 +2,7 @@
 set -eux
 
 PID=$(ps -aef|grep node|grep -v grep|awk '{print $2}')
-if [ ! -e "$PID" ]; then
+if [ "" != "$PID" ]; then
     kill $PID
 fi
 
